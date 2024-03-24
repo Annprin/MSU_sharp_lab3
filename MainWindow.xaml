@@ -1,0 +1,73 @@
+﻿<Window x:Class="lab_1_wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:lab_1_wpf"
+        mc:Ignorable="d"
+        Title="Построение интерполяционного кубического сплайна Эрмита для дискретных данных." Height="545" Width="800">
+    <Window.Resources >
+        <DataTemplate x:Key="tmpKey">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding [0], StringFormat=f4}" Margin="0, 0, 100, 0"/>
+                <TextBlock Text=" " />
+                <TextBlock Text="{Binding [1], StringFormat=f4}"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="tmpKey2">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding X, StringFormat=f4}"  Margin="0, 0, 50, 0"/>
+                <TextBlock Text=" " />
+                <TextBlock Text="{Binding Y, StringFormat=f4}"  Margin="0, 0, 50, 0"/>
+                <TextBlock Text=" " />
+                <TextBlock Text="{Binding SplineY, StringFormat=f4}" />
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid RenderTransformOrigin="0.258,0.67" Margin="0,0,0,1">
+        <Menu Margin="0,0,0,481">
+            <MenuItem Header="File">
+                <MenuItem Header="Save" Click="SaveItem_Click"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Execute">
+                <MenuItem Header="Data from Controls" Click="DataFromControlsItem_Click"></MenuItem>
+                <MenuItem Header="Data from File" Click="DataFromFileItem_Click"></MenuItem>
+            </MenuItem>
+        </Menu>
+        <TextBlock FontSize="13" HorizontalAlignment="Left" Margin="22,58,0,0" TextWrapping="Wrap" Text="Границы сетки" VerticalAlignment="Top"/>
+        <TextBox Name="GridBoundariesBox" HorizontalAlignment="Left" Margin="23,81,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBlock FontSize="13" HorizontalAlignment="Left" Margin="180,58,0,0" TextWrapping="Wrap" Text="Число узлов сетки" VerticalAlignment="Top"/>
+        <TextBox PreviewTextInput="TextBox_PreviewTextInput" Name="NumberOfNodesBox" HorizontalAlignment="Left" Margin="180,81,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.631,1.442"/>
+        <TextBlock HorizontalAlignment="Left" Margin="391,58,0,0" TextWrapping="Wrap" Text="Число узлов сглаживающего сплайна" VerticalAlignment="Top" Width="302"/>
+        <TextBox PreviewTextInput="TextBox_PreviewTextInput" Name="SmoothingSplineBox" HorizontalAlignment="Left" Margin="391,81,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.481,1.895"/>
+        <TextBlock HorizontalAlignment="Left" Margin="633,58,0,0" TextWrapping="Wrap" Text="Норма невязки" VerticalAlignment="Top"/>
+        <TextBox Name="DiscrepancyRateBox" HorizontalAlignment="Left" Margin="633,81,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBlock HorizontalAlignment="Left" Margin="22,112,0,0" TextWrapping="Wrap" Text="Число узлов равномерной сетки интерполяционного сплайна" VerticalAlignment="Top" Width="351"/>
+        <TextBox PreviewTextInput="TextBox_PreviewTextInput" Name="UniformNumBox" HorizontalAlignment="Left" Margin="23,133,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBlock HorizontalAlignment="Left" Margin="391,112,0,0" TextWrapping="Wrap" Text="Максимальное кол-во итераций" VerticalAlignment="Top" RenderTransformOrigin="0.494,0.504" Width="197"/>
+        <TextBox PreviewTextInput="TextBox_PreviewTextInput" Name="MaxIterationsBox"  HorizontalAlignment="Left" Margin="391,133,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBlock HorizontalAlignment="Left" Margin="633,112,0,0" TextWrapping="Wrap" Text="Число итераций" VerticalAlignment="Top" Width="132" RenderTransformOrigin="0.467,0.579"/>
+        
+        <TextBox Name="IterCntBox"  HorizontalAlignment="Left" Margin="633,133,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="76"/>
+        <TextBlock FontSize="13" HorizontalAlignment="Left" Margin="23,164,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="Тип сетки"/><LineBreak/><Run/></TextBlock>
+        <ComboBox Name="UniformBox" HorizontalAlignment="Left" Margin="22,187,0,0" VerticalAlignment="Top" Width="120">
+            <ComboBoxItem Content="Неравномерная"/>
+            <ComboBoxItem Content="Равномерная"/>
+        </ComboBox>
+        <TextBlock FontSize="13" HorizontalAlignment="Left" Margin="180,164,0,0" TextWrapping="Wrap" Text="Функция" VerticalAlignment="Top"/>
+        <ComboBox Name="FuncBox" HorizontalAlignment="Left" Margin="180,187,0,0" VerticalAlignment="Top" Width="120">
+            <ComboBoxItem Content="x^3"/>
+            <ComboBoxItem Content="x^2"/>
+        </ComboBox>
+        <ListBox Name="MainList" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="23,280,494,93" ItemTemplate="{StaticResource tmpKey2}">
+            <ListBox.Resources/>
+        </ListBox>
+        <ListBox Name="SecondList"  d:ItemsSource="{d:SampleData ItemCount=5}" Margin="423,280,83,91" ItemTemplate="{StaticResource tmpKey}"/>
+        <TextBlock HorizontalAlignment="Left" Margin="33,264,0,0" TextWrapping="Wrap" Text="X" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="118,264,0,0" TextWrapping="Wrap" Text="Y" VerticalAlignment="Top" RenderTransformOrigin="0.11,0.253"/>
+        <TextBlock HorizontalAlignment="Left" Margin="206,264,0,0" TextWrapping="Wrap" Text="Вычисленное Y" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="432,264,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="26"><Run Text="X"/><LineBreak/><Run/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="562,264,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="17"><Run Text="Вычисленное Y"/><LineBreak/><Run/></TextBlock>
+    </Grid>
+</Window>
