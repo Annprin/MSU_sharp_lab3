@@ -1,0 +1,20 @@
+VDataArray: Type: lab_code_3_3.V1DataArray, Key: key1, Date: 24.12.2023 0:00:00, MaxDistance: 4, DataItems Count: 5
+
+X: 1,00, Y1: 1,00, Y2: 1,00
+X: 2,00, Y1: 4,00, Y2: 4,00
+X: 3,00, Y1: 9,00, Y2: 9,00
+X: 4,00, Y1: 16,00, Y2: 16,00
+X: 5,00, Y1: 25,00, Y2: 25,00
+
+
+Spline approximation results:
+X: 1,00, Y: 1,00, SplineY: 1,00
+X: 2,00, Y: 4,00, SplineY: 4,00
+X: 3,00, Y: 9,00, SplineY: 9,00
+X: 4,00, Y: 16,00, SplineY: 16,00
+X: 5,00, Y: 25,00, SplineY: 25,00
+
+Minimal residual value: 9,84063118677563E-07
+Stop reason: specified residual norm has been reached
+Actual number of iterations: 34
+
