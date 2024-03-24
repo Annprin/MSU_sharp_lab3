@@ -98,6 +98,8 @@ namespace lab_1_wpf
                 MainList.ItemsSource = mainViewData.SplineDataObj?.splineResults;
                 SecondList.ItemsSource = mainViewData.SplineDataObj?.ResultOnAddonGrid;
                 IterCntBox.AppendText(mainViewData.SplineDataObj?.ActualNumberOfIterations.ToString() + "\n");
+                this.DataContext = null;
+                this.DataContext = mainViewData;
             }
             catch (Exception ex)
             {
@@ -115,12 +117,14 @@ namespace lab_1_wpf
                 {
                     mainViewData.Load(FilePath);
                     mainViewData.InitializeData();
-                    mainViewData.Calculation();
                     mainViewData.UpData();
+                    mainViewData.Calculation();
                     GridBoundariesBox.Text = $"{mainViewData.GridBoundaries[0]} {mainViewData.GridBoundaries[1]}";
                     NumberOfNodesBox.Text = $"{mainViewData.NodesNum}";
                     MainList.ItemsSource = mainViewData.SplineDataObj?.splineResults;
                     SecondList.ItemsSource = mainViewData.SplineDataObj?.ResultOnAddonGrid;
+                    this.DataContext = null;
+                    this.DataContext = mainViewData;
                 }
             }
             catch (Exception ex)
@@ -136,6 +140,30 @@ namespace lab_1_wpf
                 MessageBox.Show("Введите только числа");
             }
         }
-
+        private void CheckControls_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            try
+            {
+                string[] fields = { "NodesNum", "UniformNum", "LeftBorder", "SmoothingSplineNum" };
+                bool canExecute = fields.All(field => mainViewData[field] == null);
+                e.CanExecute = canExecute;
+            }
+            catch (Exception ex)
+            {
+                e.CanExecute = false;
+            }
+        }
+        private void CheckBeforeSave_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            try
+            {
+                string[] fields = { "NodesNum", "UniformNum", "LeftBorder", "SmoothingSplineNum" };
+                e.CanExecute = (mainViewData.DataArrayObj != null && fields.All(field => mainViewData[field] == null));
+            }
+            catch (Exception ex)
+            {
+                e.CanExecute = false;
+            }
+        }
     }
 }

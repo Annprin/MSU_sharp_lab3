@@ -4,9 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:lab_1_wpf"
+        xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
         Title="Построение интерполяционного кубического сплайна Эрмита для дискретных данных." Height="545" Width="800">
+
     <Window.Resources >
+        <RoutedCommand x:Key="CheckControlsCommand" />
         <DataTemplate x:Key="tmpKey">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding [0], StringFormat=f4}" Margin="0, 0, 100, 0"/>
@@ -25,13 +28,22 @@
         </DataTemplate>
     </Window.Resources>
 
-    <Grid RenderTransformOrigin="0.258,0.67" Margin="0,0,0,1">
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource CheckControlsCommand}"
+                    CanExecute="CheckControls_CanExecute"
+                    Executed="DataFromControlsItem_Click"/>
+        <CommandBinding Command="ApplicationCommands.Save"
+                    CanExecute="CheckBeforeSave_CanExecute"
+                    Executed="SaveItem_Click"/>
+    </Window.CommandBindings>
+
+    <Grid RenderTransformOrigin="0.258,0.67" Margin="0,0,0,0">
         <Menu Margin="0,0,0,481">
             <MenuItem Header="File">
-                <MenuItem Header="Save" Click="SaveItem_Click"></MenuItem>
+                <MenuItem Header="Save" Command="ApplicationCommands.Save"></MenuItem>
             </MenuItem>
             <MenuItem Header="Execute">
-                <MenuItem Header="Data from Controls" Click="DataFromControlsItem_Click"></MenuItem>
+                <MenuItem Header="Data from Controls" Command="{StaticResource CheckControlsCommand}"></MenuItem>
                 <MenuItem Header="Data from File" Click="DataFromFileItem_Click"></MenuItem>
             </MenuItem>
         </Menu>
@@ -48,7 +60,7 @@
         <TextBlock HorizontalAlignment="Left" Margin="391,112,0,0" TextWrapping="Wrap" Text="Максимальное кол-во итераций" VerticalAlignment="Top" RenderTransformOrigin="0.494,0.504" Width="197"/>
         <TextBox PreviewTextInput="TextBox_PreviewTextInput" Name="MaxIterationsBox"  HorizontalAlignment="Left" Margin="391,133,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
         <TextBlock HorizontalAlignment="Left" Margin="633,112,0,0" TextWrapping="Wrap" Text="Число итераций" VerticalAlignment="Top" Width="132" RenderTransformOrigin="0.467,0.579"/>
-        
+
         <TextBox Name="IterCntBox"  HorizontalAlignment="Left" Margin="633,133,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Height="76"/>
         <TextBlock FontSize="13" HorizontalAlignment="Left" Margin="23,164,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="Тип сетки"/><LineBreak/><Run/></TextBlock>
         <ComboBox Name="UniformBox" HorizontalAlignment="Left" Margin="22,187,0,0" VerticalAlignment="Top" Width="120">
@@ -60,14 +72,15 @@
             <ComboBoxItem Content="x^3"/>
             <ComboBoxItem Content="x^2"/>
         </ComboBox>
-        <ListBox Name="MainList" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="23,280,494,93" ItemTemplate="{StaticResource tmpKey2}">
+        <ListBox Name="MainList" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="23,280,479,142" ItemTemplate="{StaticResource tmpKey2}">
             <ListBox.Resources/>
         </ListBox>
-        <ListBox Name="SecondList"  d:ItemsSource="{d:SampleData ItemCount=5}" Margin="423,280,83,91" ItemTemplate="{StaticResource tmpKey}"/>
+        <ListBox Name="SecondList"  d:ItemsSource="{d:SampleData ItemCount=5}" Margin="25,409,479,10" ItemTemplate="{StaticResource tmpKey}"/>
         <TextBlock HorizontalAlignment="Left" Margin="33,264,0,0" TextWrapping="Wrap" Text="X" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="118,264,0,0" TextWrapping="Wrap" Text="Y" VerticalAlignment="Top" RenderTransformOrigin="0.11,0.253"/>
         <TextBlock HorizontalAlignment="Left" Margin="206,264,0,0" TextWrapping="Wrap" Text="Вычисленное Y" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="432,264,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="26"><Run Text="X"/><LineBreak/><Run/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Margin="562,264,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="17"><Run Text="Вычисленное Y"/><LineBreak/><Run/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="34,392,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="17" Width="7"><Run Text="X"/><LineBreak/><Run/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="164,392,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="93"><Run Text="Вычисленное Y"/><LineBreak/><Run/></TextBlock>
+        <oxy:PlotView Name="Plot" Model="{Binding plotModel.plotModel}" Grid.Column="0" Margin="336,227,21,8"/>
     </Grid>
 </Window>

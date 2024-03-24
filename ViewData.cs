@@ -1,6 +1,7 @@
 ﻿using lab_code_3_3;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace lab_1_wpf
         }
         public static double startF(double x) => x + 1; //Начальное приближение
     }
-    public class ViewData
+    public class ViewData : IDataErrorInfo
     {
         public int MaxIterations { get; set; }
         public double DiscrepancyRate { get; set; }
@@ -35,6 +36,7 @@ namespace lab_1_wpf
         public double[] GridBoundaries { get; set; }
         public V1DataArray? DataArrayObj;
         public SplineData? SplineDataObj;
+        public Plotter? plotModel { get; set; }
 
         public ViewData()
         {
@@ -53,6 +55,7 @@ namespace lab_1_wpf
         {
             Func<double, double> fInit = FuncCollection.startF;
             SplineData.BuildSpline(SplineDataObj, fInit, IsGridUniform);
+            plotModel = new Plotter(SplineDataObj);
         }
 
         public void InitializeData()
@@ -104,6 +107,40 @@ namespace lab_1_wpf
         public void Print(string text)
         {
             Console.WriteLine(text);
+        }
+        public string Error { get { return "Incorrect data."; } }
+        public string this[string propertyName]
+        {
+            get
+            {
+                string? error = null;
+                switch (propertyName)
+                {
+                    case "NodesNum":
+                        if (NodesNum < 3)
+                            error = "Число узлов сетки, на которой заданы дискретные значения функции, должно быть больше или равно 3";
+                        break;
+                    case "UniformNum":
+                        if (UniformNum < 3)
+                            error = "Число узлов равномерной сетки, на которой вычисляются значения сглаживающего сплайна, должно быть больше или равно 3";
+                        break;
+                    case "LeftBorder":
+                        if (GridBoundaries[0] >= GridBoundaries[1])
+                            error = "Левый конец отрезка должен быть меньше правого конца отрезка";
+                        break;
+                    case "RightBorder":
+                        if (GridBoundaries[0] >= GridBoundaries[1])
+                            error = "Левый конец отрезка должен быть меньше правого конца отрезка";
+                        break;
+                    case "SmoothingSplineNum":
+                        if (SmoothingSplineNum < 2 || SmoothingSplineNum > NodesNum)
+                            error = "Число узлов сглаживающего сплайна должно быть больше или равно 2 и меньше или равно числу заданных дискретных значений функции";
+                        break;
+                    default:
+                        break;
+                }
+                return error;
+            }
         }
     }
 }
